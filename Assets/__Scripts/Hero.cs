@@ -23,11 +23,14 @@ public class Hero : MonoBehaviour {
     private GameObject lastTriggerGo = null;
 
 
+
     //TODO: Add function delegate declaration
+    public delegate void WeaponFireDelegate();
+    public WeaponFireDelegate fireDelegate;
 
 
 
-	void Start()
+    void Start()   //same as awake
     {
         if (S == null)
         {
@@ -37,7 +40,7 @@ public class Hero : MonoBehaviour {
         {
             Debug.LogError("Hero.Awake() - Attempted to assign second Hero.S!");
         }
-        //fireDelegate += TempFire;
+        fireDelegate += TempFire;
 
         // Reset the weapons to start _Hero with 1 blaster
         ClearWeapons();

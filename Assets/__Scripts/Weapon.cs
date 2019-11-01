@@ -56,7 +56,7 @@ public class Weapon : MonoBehaviour {
         SetType(_type);
 
         // Dynamically create an anchor for all Projectiles
-        if(PROJECTILE_ANCHOR == null)
+        if (PROJECTILE_ANCHOR == null)
         {
             GameObject go = new GameObject("_ProjectileAnchor");
             PROJECTILE_ANCHOR = go.transform;
@@ -64,7 +64,7 @@ public class Weapon : MonoBehaviour {
 
         // Find the fireDelegate of the root GameObject
         GameObject rootGO = transform.root.gameObject;
-        if(rootGO.GetComponent<Hero>() != null)
+        if (rootGO.GetComponent<Hero>() != null)
         {
             rootGO.GetComponent<Hero>().fireDelegate += Fire;
         }
@@ -103,12 +103,44 @@ public class Weapon : MonoBehaviour {
     {
         //TODO: Implement Fire
 
+        if (!gameObject.activeInHierarchy) return;
+        if (Time.time - lastShotTime < def.delayBetweenShots)
+        {
+            return;
+        }
+
+        Projectile p;
+        Vector3 vel = Vector3.up * def.velocity;
+        if (transform.up.y < 0) {
+            vel.y = -vel.y;
+
+        }
     }
+        public Projectile MakeProjectile()
 
-    public Projectile MakeProjectile()
-    {
-        //TODO: Implement MakeProjectile
+        {
+
+            //TODO: Implement MakeProjectile
+
+            GameObject go = Instantiate<GameObject>(def.projectilePrefab);
+            if (transform.parent.gameObject.tag == "Hero")
+            {
+                go.tag = "ProjectileHero";
+                go.layer = LayerMask.NameToLayer("ProjectileHero");
+            }
+            else
+            {
+                go.tag = "ProjectileEnemy";
+                go.layer = LayerMask.NameToLayer("ProjectileEnemy");
+            }
+            go.transform.position = collar.transform.position;
+            go.transform.SetParent(PROJECTILE_ANCHOR, true);
+            Projectile p = go.GetComponent<Projectile>();
+            p.type = type;
+            lastShotTime = Time.time;
+            return (p);
 
 
+
+        }
     }
-}
